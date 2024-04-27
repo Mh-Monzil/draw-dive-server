@@ -30,11 +30,14 @@ async function run() {
     const database = client.db("paintingDB");
     const itemCollection = database.collection("itemCollection");
 
-    app.post('/item', async (req, res) => {
-        const item = {name: "monzil"}
+    app.post('/art_craft_items', async (req, res) => {
+        const item = req.body;
+        console.log(item);
         const result = await itemCollection.insertOne(item)
         res.send(result);
     })
+
+  
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
