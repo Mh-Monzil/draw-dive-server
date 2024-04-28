@@ -43,6 +43,14 @@ async function run() {
       res.send(result);
     })
 
+    app.get('/craft_items/:email', async (req, res) => {
+      const email = req.params.email;
+      const query = {user_email: email};
+      const cursor = itemCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+
     app.post('/craft_items', async (req, res) => {
         const item = req.body;
         console.log(item);
