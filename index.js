@@ -36,6 +36,13 @@ async function run() {
       res.send(result);
     })
 
+    app.get('/craft_items/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)};
+      const result = await itemCollection.findOne(query);
+      res.send(result);
+    })
+
     app.get('/view_details/:id', async (req, res) => {
       const id = req.params.id;
       const query = {_id: new ObjectId(id)};
