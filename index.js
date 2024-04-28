@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config()
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -25,26 +25,35 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
 
     const database = client.db("paintingDB");
     const itemCollection = database.collection("itemCollection");
 
-    app.post('/art_craft_items', async (req, res) => {
+    app.get('/craft_items', async (req, res) => {
+      const cursor = itemCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+
+    app.get('/view_details/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)};
+      const result = await itemCollection.findOne(query);
+      res.send(result);
+    })
+
+    app.post('/craft_items', async (req, res) => {
         const item = req.body;
         console.log(item);
         const result = await itemCollection.insertOne(item)
         res.send(result);
     })
 
-    app.get('/art_craft_items', async (req, res) => {
-      const cursor = itemCollection.find();
-      const result = await cursor.toArray();
-      res.send(result);
-    })
+    
 
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
+    // await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
