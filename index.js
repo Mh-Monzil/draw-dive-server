@@ -29,6 +29,7 @@ async function run() {
 
     const database = client.db("paintingDB");
     const itemCollection = database.collection("itemCollection");
+    const categoryCollection = database.collection("cateogoryCollection");
 
     app.get('/craft_items', async (req, res) => {
       const cursor = itemCollection.find();
@@ -52,10 +53,15 @@ async function run() {
 
     app.get('/craft_items/user/:email', async (req, res) => {
       const email = req.params.email;
-      console.log(email);
       const query = {user_email: email};
       const result = await itemCollection.find(query).toArray();
       res.send(result);
+    })
+
+    app.get('/categories/', async (req, res) => {
+      const cursor = categoryCollection.find();
+      const result = await cursor.toArray();
+      res.send(result)
     })
 
     app.post('/craft_items', async (req, res) => {
@@ -74,13 +80,13 @@ async function run() {
       const item = {
         $set: {
           item_name: updatedInfo.item_name,
-          category_name: updatedInfo.category_name,
+          subcategory_name: updatedInfo.subcategory_name,
           customization: updatedInfo.customization,
           photo: updatedInfo.photo,
           price: updatedInfo.price,
           processing_time: updatedInfo.processing_time,
           rating: updatedInfo.rating,
-          short_description: updatedInfo.price,
+          short_description: updatedInfo.short_description,
           stock_status: updatedInfo.stock_status,
         }
       }
