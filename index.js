@@ -58,10 +58,16 @@ async function run() {
       res.send(result);
     })
 
-    app.get('/categories/', async (req, res) => {
+    app.get('/categories', async (req, res) => {
       const cursor = categoryCollection.find();
       const result = await cursor.toArray();
       res.send(result)
+    })
+    app.get('/categories/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)};
+      const result = await categoryCollection.findOne(query);
+      res.send(result);
     })
 
     app.post('/craft_items', async (req, res) => {
